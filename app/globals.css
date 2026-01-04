@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+    --font-sans: 'Lato', sans-serif;
+}
+
+:root {
+    /* Default to Light Mode */
+    --color-bg: #F0F4F8;
+    /* Light Blue-ish Gray */
+    --color-card: #FFFFFF;
+    --color-text-main: #192126;
+    --color-text-muted: #64748B;
+
+    --color-primary: #1A6BFF;
+
+    /* Stats Colors */
+    --color-calories: #FF7E36;
+    --color-steps: #4B9CFA;
+    --color-time: #4BD1A0;
+}
+
+[data-theme='dark'] {
+    --color-bg: #0B1116;
+    --color-card: #151B25;
+    --color-text-main: #FFFFFF;
+    --color-text-muted: #8B95A5;
+}
+
+body {
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@layer components {
+
+    /* Buttons */
+    /* Buttons */
+    .btn-primary {
+        @apply bg-[var(--color-primary)] text-white font-bold rounded-2xl py-4 transition-transform active:scale-95 shadow-lg shadow-blue-500/20 outline-none flex items-center justify-center gap-2;
+    }
+
+    /* Cards */
+    .card-clean {
+        @apply bg-[var(--color-card)] rounded-3xl p-5 shadow-sm transition-colors duration-300;
+        /* Add shadow for light mode, maybe subtle border? */
+    }
+
+    /* Badge */
+    .badge-ai {
+        @apply bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 uppercase tracking-wider;
+    }
+
+    /* Inputs (if needed later) */
+    .input-clean {
+        @apply w-full bg-[var(--color-card)] border border-gray-200 dark:border-gray-800 rounded-2xl py-4 px-4 text-[var(--color-text-main)] placeholder-gray-400 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all font-sans;
+    }
+}
