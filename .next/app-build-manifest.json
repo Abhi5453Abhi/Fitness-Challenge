@@ -1,48 +1,20 @@
 {
   "pages": {
-    "/_not-found/page": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/chunks/app/_not-found/page-94f97a16d07b932c.js"
-    ],
     "/layout": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/css/def7508731dcbe5e.css",
-      "static/chunks/app/layout-274f3a436ff1862b.js"
-    ],
-    "/api/health/route": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/chunks/app/api/health/route-c965d4faeae5b601.js"
-    ],
-    "/api/analyze-workout/route": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/chunks/app/api/analyze-workout/route-c965d4faeae5b601.js"
-    ],
-    "/api/generate-plan/route": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/chunks/app/api/generate-plan/route-c965d4faeae5b601.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
     "/page": [
-      "static/chunks/webpack-3844d017889aa547.js",
-      "static/chunks/4bd1b696-c023c6e3521b1417.js",
-      "static/chunks/255-cb395327542b56ef.js",
-      "static/chunks/main-app-ccaeafef51f7075b.js",
-      "static/chunks/188-caac5f568d04bb09.js",
-      "static/chunks/app/page-7d0007e1211d8b55.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
+    "/api/uploadthing/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/uploadthing/route.js"
     ]
   }
 }

@@ -13,17 +13,9 @@ export function LandingPage({ onStart }: LandingPageProps) {
     const [mobileNumber, setMobileNumber] = React.useState('');
     const [name, setName] = React.useState('');
 
-    React.useEffect(() => {
-        const storedName = localStorage.getItem('fit_challenge_user');
-        if (storedName) {
-            onStart(storedName);
-        }
-    }, [onStart]);
-
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         if (mobileNumber.length >= 10 && name.length > 0) {
-            localStorage.setItem('fit_challenge_user', name);
             onStart(name);
         }
     };
