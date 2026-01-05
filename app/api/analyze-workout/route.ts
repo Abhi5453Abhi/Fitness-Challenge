@@ -2,77 +2,65 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { GoogleAIFileManager, FileState } from "@google/generative-ai/server";
 import { NextResponse } from "next/server";
-import { writeFile, unlink } from "fs/promises";
-import path from "path";
-import os from "os";
+// import { writeFile, unlink } from "fs/promises";
+// import path from "path";
+// import os from "os";
+
+// Polyfill XMLHttpRequest for Firebase Storage in Node.js environment
+// import "xhr2";
+// @ts-ignore
+// global.XMLHttpRequest = require("xhr2");
+
+// Firebase imports
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+// Firebase imports removed for local dev reliability
+// import { storage } from "@/lib/firebase";
+// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+// DB imports
+import { db } from "@/lib/db";
+import { workouts } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 const apiKey = process.env.GEMINI_API_KEY;
-const genAI = new GoogleGenerativeAI(apiKey || "");
-const fileManager = new GoogleAIFileManager(apiKey || "");
+// const genAI = new GoogleGenerativeAI(apiKey || "");
+// const fileManager = new GoogleAIFileManager(apiKey || "");
+
 
 export async function POST(request: Request) {
-    if (!apiKey) {
-        return NextResponse.json({ error: "GEMINI_API_KEY is not set" }, { status: 500 });
-    }
-
     try {
-        const formData = await request.formData();
-        const file = formData.get("file") as File;
+        const body = await request.json();
+        const { userName, videoUrl } = body;
 
-        if (!file) {
-            return NextResponse.json({ error: "No file provided" }, { status: 400 });
+        if (!videoUrl) {
+            return NextResponse.json({ error: "No video URL provided" }, { status: 400 });
         }
 
-        // Convert File to Buffer
-        const bytes = await file.arrayBuffer();
-        const buffer = Buffer.from(bytes);
+        console.log("Processing workout for:", userName, "Video:", videoUrl);
 
-        // Save to temporary file
-        const tempFilePath = path.join(os.tmpdir(), `upload-${Date.now()}.webm`);
-        await writeFile(tempFilePath, buffer);
+        // 2. Save to PENDING state in DB
+        const [newWorkout] = await db.insert(workouts).values({
+            userName: userName || "Anonymous",
+            videoUrl: videoUrl,
+            status: "PENDING",
+            adminCount: null,
+            geminiCount: 0
+        }).returning({ id: workouts.id });
 
-        // Upload to Gemini
-        const uploadResponse = await fileManager.uploadFile(tempFilePath, {
-            mimeType: file.type || "video/webm",
-            displayName: "Workout Analysis Request",
-        });
+        console.log("DB Record created:", newWorkout.id);
 
-        const fileUri = uploadResponse.file.uri;
-        const name = uploadResponse.file.name;
 
-        // Wait for file processing to be active
-        let fileState = await fileManager.getFile(name);
-        while (fileState.state === FileState.PROCESSING) {
-            await new Promise((resolve) => setTimeout(resolve, 2000));
-            fileState = await fileManager.getFile(name);
-        }
+        /* GEMINI ANALYSIS TEMPORARILY DISABLED
+        // To re-enable:
+        // 1. Uncomment imports
+        // 2. Restore temp file creation
+        // 3. Restore fileManager.uploadFile
+        // 4. Restore model.generateContent
+        */
 
-        if (fileState.state === FileState.FAILED) {
-            return NextResponse.json({ error: "Video processing failed by Gemini." }, { status: 500 });
-        }
-
-        // Generate Content
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent([
-            {
-                fileData: {
-                    mimeType: uploadResponse.file.mimeType,
-                    fileUri: fileUri
-                }
-            },
-            { text: "Analyze this video carefully. detailedly Count the number of completed push-ups performed by the person. Return ONLY the integer number of completed reps. If no push-ups are detected or you are unsure, return 0." }
-        ]);
-
-        const responseText = result.response.text();
-        const reps = parseInt(responseText.replace(/\D/g, ''), 10) || 0;
-
-        // Cleanup: Delete temp file
-        await unlink(tempFilePath).catch(console.error);
-
-        // Cleanup: Delete file from Gemini (optional, good practice)
-        // await fileManager.deleteFile(name).catch(console.error);
-
-        return NextResponse.json({ count: reps });
+        return NextResponse.json({ count: 0, message: "Video uploaded for manual review" });
 
     } catch (error) {
         console.error("Analysis Error:", error);
